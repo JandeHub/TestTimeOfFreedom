@@ -77,6 +77,7 @@ public class CharacterEngine : MonoBehaviour
 
 	private void Start()
     {
+		Cursor.lockState = CursorLockMode.Locked;
 		jump = false;
 		crouched = false;
 

@@ -11,11 +11,10 @@ public class DoorSystemSliding : InteractManager
     //Settings
     [SerializeField] private bool autoClose;
     [SerializeField] private float speed;
-    [SerializeField] private bool isOpening;
-
+   
     [SerializeField] private Transform endDoor;
 
-    
+    private bool isOpening;
     private float timer;
     private bool isOpen;
     // Start is called before the first frame update
