@@ -1,30 +1,80 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class SecurityCamSystem : MonoBehaviour
 {
-    public float defaultPitch;
-    public float Angle;
-    public float speed;
+    public static Transform target;
+    [SerializeField] private Transform securityCamera;
 
-    float currentAngles;
-    bool sweep = true;
+    [SerializeField] private float timeToSpotPlayer;
+    private float playerVisibleTimer;
+
+    public Light spotlight;
+    public float viewDistance;
+    public LayerMask viewMask;
+    Color originalSpotlightColour;
+
+    public static bool isDetected;
+
+    public event Action SpawningSpiders = delegate { };
+
+    float viewAngle;
     // Start is called before the first frame update
     void Start()
     {
-        
+        target = GameObject.FindGameObjectWithTag("Player").transform;
+        viewAngle = spotlight.spotAngle;
+        originalSpotlightColour = spotlight.color;
     }
 
     // Update is called once per frame
     void Update()
     {
-        currentAngles += speed * Time.deltaTime * (sweep ? 1f : -1f);
-        if(Mathf.Abs(currentAngles) >= (Angle * 0.5f))
+        if (CanSeePlayer())
         {
-            sweep = !sweep;
+            isDetected = true;
+            playerVisibleTimer += Time.deltaTime;
+            spotlight.color = Color.red;
         }
+        else
+        {
+            isDetected = false;
+            playerVisibleTimer -= Time.deltaTime;
+            spotlight.color = originalSpotlightColour;
+        }
+        playerVisibleTimer = Mathf.Clamp(playerVisibleTimer, 0, timeToSpotPlayer);
+        spotlight.color = Color.Lerp(originalSpotlightColour, Color.red, playerVisibleTimer / timeToSpotPlayer);
 
-        transform.localEulerAngles = new Vector3(0f, currentAngles, defaultPitch);
+
+        if (playerVisibleTimer >= timeToSpotPlayer)
+        {
+            SpawningSpiders();
+        }
+    }
+
+    bool CanSeePlayer()
+    {
+        if (Vector3.Distance(transform.position, target.position) < viewDistance)
+        {
+            Vector3 dirToPlayer = (target.position - transform.position).normalized;
+            float angleBetweenGuardAndPlayer = Vector3.Angle(securityCamera.forward, dirToPlayer);
+            if (angleBetweenGuardAndPlayer < viewAngle / 2f)
+            {
+                if (!Physics.Linecast(securityCamera.position, target.position, viewMask))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(securityCamera.position, securityCamera.forward * viewDistance);
+
     }
 }
