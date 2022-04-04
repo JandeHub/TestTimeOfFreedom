@@ -802,7 +802,7 @@ GameObject:
   - component: {fileID: 6641579062092700353}
   m_Layer: 0
   m_Name: OrangeSpider
-  m_TagString: Untagged
+  m_TagString: Spider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -901,8 +901,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  apearing: 0
-  spiderSpeed: 100
+  spiderJumpForce: 0.13
+  spiderSpeed: 2
+  radius: 1.5
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &6641579062092700353
 MonoBehaviour:
   m_ObjectHideFlags: 0

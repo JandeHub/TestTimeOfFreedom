@@ -6,8 +6,9 @@ public class SpiderFollowing : MonoBehaviour
 {
     public Transform target;
 
-    public bool apearing;
+ 
 
+    public float spiderJumpForce;
     public float spiderSpeed = 1f;
     public float radius;
     public LayerMask layerMask;
@@ -38,7 +39,7 @@ public class SpiderFollowing : MonoBehaviour
     {
         if(Physics.CheckSphere(transform.position, radius, layerMask))
         {
-            Debug.Log("Collisionando");
+            _rb.AddForce(Vector3.up * spiderJumpForce, ForceMode.VelocityChange);
         }
         else
         {
@@ -51,7 +52,7 @@ public class SpiderFollowing : MonoBehaviour
 
     void FollowTarget()
     {
-        apearing = true;
+
         
     }
 

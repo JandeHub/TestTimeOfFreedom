@@ -9,6 +9,7 @@ public class SpiderSpawn : MonoBehaviour
     public Transform camerasecurity;
 
     public Transform spiderParents;
+    public int numSpiders;
     private bool Spoted;
 
     public event Action FollowingSpiders = delegate { };
@@ -30,7 +31,7 @@ public class SpiderSpawn : MonoBehaviour
     {
         if (Spoted)
         {
-            Instantiate(spiderPrefab, camerasecurity.position, transform.rotation, spiderParents);
+            StartCoroutine("SpawnS");
             FollowingSpiders();
         }
     }
@@ -38,5 +39,17 @@ public class SpiderSpawn : MonoBehaviour
     void Spawn()
     {
         Spoted = !Spoted;
+    }
+
+    IEnumerator SpawnS()
+    {
+        for (int i = 0; i < numSpiders; i++)
+        {
+            Instantiate(spiderPrefab, camerasecurity.position, transform.rotation, spiderParents);
+
+            numSpiders++;
+
+            yield return new WaitForSeconds(1f);
+        }
     }
 }

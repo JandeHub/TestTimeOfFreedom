@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -311,20 +311,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -4309348397974014852, guid: 58e964e72c39e9341b83921e0d033007, type: 3}
-      propertyPath: radius
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: -4309348397974014852, guid: 58e964e72c39e9341b83921e0d033007, type: 3}
       propertyPath: target
       value: 
       objectReference: {fileID: 1208371473}
     - target: {fileID: -4309348397974014852, guid: 58e964e72c39e9341b83921e0d033007, type: 3}
-      propertyPath: spiderSpeed
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: -4309348397974014852, guid: 58e964e72c39e9341b83921e0d033007, type: 3}
-      propertyPath: layerMask.m_Bits
-      value: 183
+      propertyPath: spiderJumpForce
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6641579062092700355, guid: 58e964e72c39e9341b83921e0d033007, type: 3}
       propertyPath: m_Name
@@ -4039,7 +4031,7 @@ MonoBehaviour:
   jumpForce: 5
   crouchJumpForce: 2.5
   withoutStaminaJumpForce: 2
-  sensitivity: 100
+  sensitivity: 300
   gravity: 9.81
   cam: {fileID: 2029436622}
   activeSpeed: 0
@@ -7730,6 +7722,7 @@ MonoBehaviour:
   spiderPrefab: {fileID: 6641579062092700355, guid: 58e964e72c39e9341b83921e0d033007, type: 3}
   camerasecurity: {fileID: 9024514631355987170}
   spiderParents: {fileID: 1854648446}
+  numSpiders: 4
 --- !u!4 &7279110936802574042
 Transform:
   m_ObjectHideFlags: 0
