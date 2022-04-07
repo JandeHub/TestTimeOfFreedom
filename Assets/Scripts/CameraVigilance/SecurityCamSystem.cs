@@ -32,6 +32,9 @@ public class SecurityCamSystem : MonoBehaviour
         target = GameObject.FindGameObjectWithTag("Player").transform;
         viewAngle = spotlight.spotAngle;
         originalSpotlightColour = spotlight.color;
+
+        explosionParticle.SetActive(false);
+        Instantiate(explosionParticle, securityCamera.position, Quaternion.Euler(0, 0, -110), securityCamera);
     }
 
     // Update is called once per frame
@@ -64,7 +67,7 @@ public class SecurityCamSystem : MonoBehaviour
 
         else
         {
-          
+            explosionParticle.SetActive(true);
         }
     }
 
