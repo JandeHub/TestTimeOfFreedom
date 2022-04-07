@@ -6,8 +6,6 @@ public class SpiderFollowing : MonoBehaviour
 {
     public Transform target;
 
- 
-
     public float spiderJumpForce;
     public float spiderSpeed = 1f;
     public float radius;
@@ -18,14 +16,6 @@ public class SpiderFollowing : MonoBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
-    }
-    private void OnEnable()
-    {
-        GetComponent<SpiderSpawn>().FollowingSpiders += FollowTarget;
-    }
-    private void OnDisable()
-    {
-        GetComponent<SpiderSpawn>().FollowingSpiders -= FollowTarget;
     }
 
 
@@ -50,11 +40,6 @@ public class SpiderFollowing : MonoBehaviour
         
     }
 
-    void FollowTarget()
-    {
-
-        
-    }
 
     private void OnDrawGizmos()
     {

@@ -29,27 +29,25 @@ public class SpiderSpawn : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Spoted)
-        {
-            StartCoroutine("SpawnS");
-            FollowingSpiders();
-        }
+        
     }
 
     void Spawn()
     {
-        Spoted = !Spoted;
+
+        SpawnS();
+
     }
 
-    IEnumerator SpawnS()
+    void SpawnS()
     {
         for (int i = 0; i < numSpiders; i++)
         {
-            Instantiate(spiderPrefab, camerasecurity.position, transform.rotation, spiderParents);
+            if (numSpiders > i)
+            {
+                Instantiate(spiderPrefab, camerasecurity.position, transform.rotation, spiderParents);
+            }
 
-            numSpiders++;
-
-            yield return new WaitForSeconds(1f);
         }
     }
 }

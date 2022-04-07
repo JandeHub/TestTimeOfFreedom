@@ -7,9 +7,12 @@ public class SecurityCamSystem : MonoBehaviour
 {
     public static Transform target;
     [SerializeField] private Transform securityCamera;
+    public GameObject explosionParticle;
 
     [SerializeField] private float timeToSpotPlayer;
     private float playerVisibleTimer;
+    private float timer = 0f;
+    public float maxTimer = 3f;
 
     public Light spotlight;
     public float viewDistance;
@@ -20,10 +23,12 @@ public class SecurityCamSystem : MonoBehaviour
 
     public event Action SpawningSpiders = delegate { };
 
+
     float viewAngle;
     // Start is called before the first frame update
     void Start()
     {
+        timer = maxTimer;
         target = GameObject.FindGameObjectWithTag("Player").transform;
         viewAngle = spotlight.spotAngle;
         originalSpotlightColour = spotlight.color;
@@ -32,25 +37,34 @@ public class SecurityCamSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (CanSeePlayer())
+        if (timer > 0)
         {
-            isDetected = true;
-            playerVisibleTimer += Time.deltaTime;
-            spotlight.color = Color.red;
+            if (CanSeePlayer())
+            {
+                isDetected = true;
+                playerVisibleTimer += Time.deltaTime;
+                spotlight.color = Color.red;
+            }
+            else
+            {
+                isDetected = false;
+                timer = maxTimer;
+                playerVisibleTimer -= Time.deltaTime;
+                spotlight.color = originalSpotlightColour;
+            }
+            playerVisibleTimer = Mathf.Clamp(playerVisibleTimer, 0, timeToSpotPlayer);
+            spotlight.color = Color.Lerp(originalSpotlightColour, Color.red, playerVisibleTimer / timeToSpotPlayer);
+
+        
+            if (playerVisibleTimer >= timeToSpotPlayer)
+            {
+                StartCoroutine("DestroyCountdown");
+            }
         }
+
         else
         {
-            isDetected = false;
-            playerVisibleTimer -= Time.deltaTime;
-            spotlight.color = originalSpotlightColour;
-        }
-        playerVisibleTimer = Mathf.Clamp(playerVisibleTimer, 0, timeToSpotPlayer);
-        spotlight.color = Color.Lerp(originalSpotlightColour, Color.red, playerVisibleTimer / timeToSpotPlayer);
-
-
-        if (playerVisibleTimer >= timeToSpotPlayer)
-        {
-            SpawningSpiders();
+          
         }
     }
 
@@ -71,6 +85,19 @@ public class SecurityCamSystem : MonoBehaviour
         return false;
     }
 
+    IEnumerator DestroyCountdown()
+    {
+
+        if(timer > 0)
+        { 
+            timer -= Time.deltaTime;
+            Debug.Log(timer);
+        }
+        SpawningSpiders();
+
+
+        yield return new WaitForSeconds(1f);
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
