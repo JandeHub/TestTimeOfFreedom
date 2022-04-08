@@ -7,7 +7,7 @@ public class SecurityCamSystem : MonoBehaviour
 {
     public static Transform target;
     [SerializeField] private Transform securityCamera;
-    public GameObject explosionParticle;
+    public Transform explosionParticle;
 
     [SerializeField] private float timeToSpotPlayer;
     private float playerVisibleTimer;
@@ -33,8 +33,9 @@ public class SecurityCamSystem : MonoBehaviour
         viewAngle = spotlight.spotAngle;
         originalSpotlightColour = spotlight.color;
 
-        explosionParticle.SetActive(false);
         Instantiate(explosionParticle, securityCamera.position, Quaternion.Euler(0, 0, -110), securityCamera);
+        
+        
     }
 
     // Update is called once per frame
@@ -42,6 +43,7 @@ public class SecurityCamSystem : MonoBehaviour
     {
         if (timer > 0)
         {
+            explosionParticle.gameObject.SetActive(false);
             if (CanSeePlayer())
             {
                 isDetected = true;
@@ -67,7 +69,8 @@ public class SecurityCamSystem : MonoBehaviour
 
         else
         {
-            explosionParticle.SetActive(true);
+            spotlight.enabled = false;
+            explosionParticle.gameObject.SetActive(true);
         }
     }
 
