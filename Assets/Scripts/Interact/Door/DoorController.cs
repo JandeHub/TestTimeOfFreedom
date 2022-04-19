@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
-public class DoorSystem : InteractManager
+public class DoorController : InteractManager
 {
     [Header("Global Variables")]
     [SerializeField] private bool autoClose;
     [SerializeField] private float speed;
+    public bool lockedByPassword;
     private Transform player;
     private float timer = 0f;
     private bool isOpen;
@@ -15,16 +17,21 @@ public class DoorSystem : InteractManager
     [SerializeField] private Transform pivot;
     private float targetYRotation;
     private float defaultYRotation = 0f;
-    public bool rotate;
 
     //Slide
     private Vector3 endTargetPosition;
     private Vector3 startTargetPosition;
     [SerializeField] private Transform endDoor;
     private bool isOpeningSlide;
-    public bool slide;
 
-    void Start()
+    public enum DisplayCategory
+    {
+        Slide, Rotate
+    }
+
+    public DisplayCategory categoryDisplay;
+
+    public void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         defaultYRotation = transform.eulerAngles.y;
@@ -32,39 +39,57 @@ public class DoorSystem : InteractManager
         endTargetPosition = endDoor.position;
         startTargetPosition = transform.position;
     }
-
-    void Update()
+    public void Update()
     {
-        //Rotate
-        if (rotate)
+
+        switch(categoryDisplay)
         {
-            pivot.rotation = Quaternion.Lerp(pivot.rotation, Quaternion.Euler(0f, defaultYRotation + targetYRotation, 0f), speed * Time.deltaTime);
+            case DisplayCategory.Slide:
+                DisplaySlide();
+                break;
 
-            timer -= Time.deltaTime;
+            case DisplayCategory.Rotate:
+                DisplayRotate();
+                break;
+        }
+       
+    }
 
-            if (timer <= 0f && isOpen && autoClose)
-            {
-                ToggleDoorRotate(player.position);
-            }
+    void DisplaySlide()
+    {
+        if (isOpeningSlide)
+        {
+            transform.position = Vector3.Lerp(transform.position, endTargetPosition, speed * Time.deltaTime);
+        }
+        else
+        {
+            transform.position = Vector3.Lerp(transform.position, startTargetPosition, speed * Time.deltaTime);
         }
 
-        //Slide
-        if (slide)
+    }
+
+    void DisplayRotate()
+    {
+        pivot.rotation = Quaternion.Lerp(pivot.rotation, Quaternion.Euler(0f, defaultYRotation + targetYRotation, 0f), speed * Time.deltaTime);
+
+        timer -= Time.deltaTime;
+
+        if (timer <= 0f && isOpen && autoClose)
         {
-            if (isOpeningSlide)
-            {
-                transform.position = Vector3.Lerp(transform.position, endTargetPosition, speed * Time.deltaTime);
-            }
-            else
-            {
-                transform.position = Vector3.Lerp(transform.position, startTargetPosition, speed * Time.deltaTime);
-            }
+            ToggleDoorRotate(player.position);
         }
+
     }
 
     public void ToggleDoorRotate(Vector3 pos)
     {
         isOpen = !isOpen;
+
+        if(lockedByPassword)
+        {
+            Debug.Log("Locked by password");
+            return;
+        }
 
         if (isOpen)
         {

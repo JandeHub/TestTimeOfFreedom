@@ -45,6 +45,7 @@ public class PlayerInteractable : MonoBehaviour
 
         bool successfulHit = false;
 
+        //Interact
         if (Physics.Raycast(ray, out hit, interactionDistance))
         {
             InteractManager interactable = hit.collider.GetComponent<InteractManager>();
@@ -58,7 +59,24 @@ public class PlayerInteractable : MonoBehaviour
                 interactionHoldGO.SetActive(interactable.interactionType == InteractManager.InteractionType.Hold);
             }
 
+            //interact withKeypad
+
+            float distance = Vector3.Distance(transform.position, hit.transform.position);
+            if (distance <= 3f)
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (hit.transform.GetComponent<KeypadKey>() != null)
+                    {
+                        hit.transform.GetComponent<KeypadKey>().SendKey();
+                    }
+
+                }
+            }
+
         }
+
+        
 
  
         if (!successfulHit)
@@ -77,7 +95,6 @@ public class PlayerInteractable : MonoBehaviour
                 if (interact)
                 {
                     interactable.Interact();
-                    Debug.Log("Funcionando");
                     interact = false;
                 }
                 break;
@@ -89,7 +106,6 @@ public class PlayerInteractable : MonoBehaviour
                     if (interactable.GetHoldTime() > 1f) {
                         interactable.Interact();
                         interactable.ResetHoldTime();
-                        Debug.Log("Funcionando");
                         interact = false;
                     }
                 }

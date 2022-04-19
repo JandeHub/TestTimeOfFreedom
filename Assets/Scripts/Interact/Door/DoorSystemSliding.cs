@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DoorSystemSliding : InteractManager
 {
+
     //Positions Door
     private Vector3 endTargetPosition;
     private Vector3 startTargetPosition;
@@ -45,6 +46,8 @@ public class DoorSystemSliding : InteractManager
     }
     public void ToggleDoor()
     {
+  
+
         isOpen = !isOpen;
 
         if (isOpen)
