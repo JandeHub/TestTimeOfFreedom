@@ -34,7 +34,7 @@ public class KeypadController : MonoBehaviour
         }
 
         int length = passwordText.text.ToString().Length;
-        if(length<passwordLimit)
+        if(length < passwordLimit)
         {
             passwordText.text = passwordText.text + number;
         }

@@ -2902,6 +2902,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1076ae76b882f44387f1cd6064d0a73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  door: {fileID: 0}
   password: 1234
   passwordLimit: 4
   passwordText: {fileID: 2486174541390671589}
