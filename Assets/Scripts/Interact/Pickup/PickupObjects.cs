@@ -26,9 +26,12 @@ public class PickupObjects : MonoBehaviour
     private void Awake()
     {
         camera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+        GetComponent<PickupObjects>().enabled = false;
     }
+
     void FixedUpdate()
     {
+        
         if (heldObject != null)
         {
             MoveObject();

@@ -29,6 +29,5 @@ public class SwitchLight : InteractManager
     {
         
         UpdateLight();
-        Debug.Log("Funcionando");
     }
 }

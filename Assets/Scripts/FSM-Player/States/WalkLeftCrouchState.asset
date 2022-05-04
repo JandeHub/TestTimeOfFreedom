@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 672eb34546c88b943adaa36b82ddc425, type: 3}
+  m_Name: WalkLeftCrouchState
+  m_EditorClassIdentifier: 
+  actions:
+  - {fileID: 11400000, guid: bb4ef610c93a6cd4588e9d5b2ac8158e, type: 2}
+  transitions:
+  - decision: {fileID: 11400000, guid: a015609c3ed89a5479db7ecce30b8f20, type: 2}
+    trueState: {fileID: 11400000, guid: 5ee9298560630914b88ce1aa66037478, type: 2}
+    falseState: {fileID: 11400000}
+  - decision: {fileID: 11400000, guid: ea5fd3ae7d5a04948b260e3f3d48adeb, type: 2}
+    trueState: {fileID: 11400000, guid: a007281a96ef4684cbb57fa8086eee35, type: 2}
+    falseState: {fileID: 11400000}
+  - decision: {fileID: 11400000, guid: a79746912b44bc04baf65b6a6033b516, type: 2}
+    trueState: {fileID: 11400000, guid: 910e0c744e408d94590ebceb5ce393a9, type: 2}
+    falseState: {fileID: 11400000}
+  - decision: {fileID: 11400000, guid: a139204f3e4fcfe4280d522f378b1852, type: 2}
+    trueState: {fileID: 11400000, guid: b3d747b6dfd545c4a8b6a3c26af5e81b, type: 2}
+    falseState: {fileID: 11400000}
+  - decision: {fileID: 11400000, guid: d62b7ef638a3d7b42851c0d2f9dfaa17, type: 2}
+    trueState: {fileID: 11400000, guid: ae935031880b10741aa7bcb1214c094e, type: 2}
+    falseState: {fileID: 11400000}

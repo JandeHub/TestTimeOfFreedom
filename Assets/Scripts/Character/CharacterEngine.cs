@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterEngine : MonoBehaviour 
+public class CharacterEngine : MonoBehaviour
 {
-	[Header("Character Speed")]
 	[SerializeField]
 	private float speed;
 	[SerializeField]
@@ -13,23 +12,22 @@ public class CharacterEngine : MonoBehaviour
 	private float crouchSpeed;
 	[SerializeField]
 	private float runSpeed;
-
-	[Header("Character Jump")]
 	[SerializeField]
 	private float jumpForce;
 	[SerializeField]
 	private float crouchJumpForce;
 	[SerializeField]
 	private float withoutStaminaJumpForce;
-
-	[Header("Mouse Sensitivity")]
 	[SerializeField]
 	private float sensitivity;
 	[SerializeField]
 	private float gravity;
-
-    public GameObject cam;
-
+	[SerializeField]
+	private GameObject cam;
+	[SerializeField]
+	private float maxCamVerRot;
+	[SerializeField]
+	private GameObject[] CameraPositions;
 
 	private float moveFB; //Move Front/Back
 	private float moveLR; //Move Left/Right
@@ -40,10 +38,10 @@ public class CharacterEngine : MonoBehaviour
 
 	private bool crouched;
 	private bool jump;
+	private bool run;
 
-	[Header("RealTime Amount")]
-	public float activeSpeed;
-	public float activeJumpForce;
+	public static float activeSpeed;
+	private float activeJumpForce;
 
 	private InputSystemKeyboard _inputSystem;
 	private Rigidbody _rb;
@@ -61,22 +59,22 @@ public class CharacterEngine : MonoBehaviour
 		_renderer = GetComponent<MeshRenderer>();
 	}
 
-    private void OnEnable()
-    {
+	private void OnEnable()
+	{
 		_inputSystem.OnJump += SetJump;
 		_inputSystem.OnCrouch += SetCrouch;
 		_inputSystem.OnRun += SetRun;
-    }
+	}
 
-    private void OnDisable()
-    {
+	private void OnDisable()
+	{
 		_inputSystem.OnJump -= SetJump;
 		_inputSystem.OnCrouch -= SetCrouch;
 		_inputSystem.OnRun -= SetRun;
 	}
 
 	private void Start()
-    {
+	{
 		Cursor.lockState = CursorLockMode.Locked;
 		jump = false;
 		crouched = false;
@@ -84,7 +82,7 @@ public class CharacterEngine : MonoBehaviour
 		SetNormalSpeeds();
 	}
 
-    void FixedUpdate()
+	void FixedUpdate()
 	{
 		moveFB = _inputSystem.axHor * activeSpeed;
 		moveLR = _inputSystem.axVer * activeSpeed;
@@ -92,14 +90,14 @@ public class CharacterEngine : MonoBehaviour
 		rotHor = _inputSystem.moHor * sensitivity;
 		rotVer = _inputSystem.moVer * sensitivity;
 
-		Vector3 movement = new Vector3(moveFB, 0, moveLR);		
+		Vector3 movement = new Vector3(moveFB, 0, moveLR);
 
 		if (jump)
-        {
+		{
 			directionY = activeJumpForce;
 
 			jump = false;
-        }
+		}
 
 		if (!GroundCheckerManager.isGrounded)
 		{
@@ -115,23 +113,23 @@ public class CharacterEngine : MonoBehaviour
 		}
 
 		movement = transform.rotation * movement;
-		_rb.velocity= new Vector3(movement.x, movement.y, movement.z);
+		_rb.velocity = new Vector3(movement.x, movement.y, movement.z);
 
 		CameraRotation(cam, rotHor, rotVer);
 
 
 		//Debug
-		GroundDetector();
+		//GroundDetector();
 	}
 
 	void CameraRotation(GameObject cam, float rotHor, float rotVer)
 	{
-		transform.Rotate (0, rotHor * Time.fixedDeltaTime, 0);
-		cam.transform.Rotate (-rotVer * Time.fixedDeltaTime, 0, 0);
+		transform.Rotate(0, rotHor * Time.fixedDeltaTime, 0);
+		cam.transform.Rotate(-rotVer * Time.fixedDeltaTime, 0, 0);
 
-		if (Mathf.Abs (cam.transform.localRotation.x) > 0.7) 
+		if (Mathf.Abs(cam.transform.localRotation.x) > maxCamVerRot)
 		{
-			float clamped = 0.7f * Mathf.Sign(cam.transform.localRotation.x); 
+			float clamped = maxCamVerRot * Mathf.Sign(cam.transform.localRotation.x);
 
 			Quaternion adjustedRotation = new Quaternion(clamped, cam.transform.localRotation.y, cam.transform.localRotation.z, cam.transform.localRotation.w);
 			cam.transform.localRotation = adjustedRotation;
@@ -139,12 +137,12 @@ public class CharacterEngine : MonoBehaviour
 	}
 
 	void SetCrouch()
-    {
+	{
 		if (GroundCheckerManager.isGrounded)
 		{
 			if (!crouched)
 			{
-				cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y - 0.5f, cam.transform.position.z);
+				cam.transform.position = CameraPositions[1].transform.position;
 
 				activeSpeed = crouchSpeed;
 				activeJumpForce = crouchJumpForce;
@@ -153,7 +151,7 @@ public class CharacterEngine : MonoBehaviour
 			}
 			else
 			{
-				cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y + 0.5f, cam.transform.position.z);
+				cam.transform.position = CameraPositions[0].transform.position;
 
 				SetNormalSpeeds();
 
@@ -170,11 +168,13 @@ public class CharacterEngine : MonoBehaviour
 		}
 	}
 
-	void SetRun(bool run)
-    {
+	void SetRun(bool running)
+	{
 		if (!crouched && GroundCheckerManager.isGrounded && StaminaManager.currentStamina >= 0)
 		{
-			if (run)
+			run = running;
+
+			if (running)
 			{
 				activeSpeed = runSpeed;
 			}
@@ -183,15 +183,15 @@ public class CharacterEngine : MonoBehaviour
 				SetNormalSpeeds();
 			}
 		}
-    }
+	}
 
 	void SetNormalSpeeds()
-    {
+	{
 		activeSpeed = speed;
 		activeJumpForce = jumpForce;
-    }
+	}
 
-	void GroundDetector()
+	/*void GroundDetector()
 	{
 		if (GroundCheckerManager.isGrounded)
 		{
@@ -201,5 +201,20 @@ public class CharacterEngine : MonoBehaviour
 		{
 			_renderer.material = matNotGround;
 		}
+	}*/
+
+	public bool ReturnCrouch()
+    {
+		return crouched;
+    }
+
+	public bool ReturnJump() 
+	{
+		return jump;
 	}
+
+	public bool ReturnRun()
+    {
+		return run;
+    }
 }
